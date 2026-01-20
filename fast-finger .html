@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fast Fingers Fun - Typing Game</title>
+<style>
+  body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: #f0f8ff;
+    text-align: center;
+    padding: 50px;
+  }
+  h1 {
+    color: #ff4500;
+  }
+  #wordDisplay {
+    font-size: 30px;
+    margin: 20px 0;
+    color: #006400;
+    font-weight: bold;
+  }
+  #inputBox {
+    font-size: 20px;
+    padding: 10px;
+    width: 300px;
+    border-radius: 10px;
+    border: 2px solid #ff6347;
+  }
+  #score, #timer {
+    font-size: 24px;
+    margin: 10px;
+  }
+  #startBtn, #restartBtn {
+    font-size: 20px;
+    padding: 10px 20px;
+    margin: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #ff6347;
+    color: white;
+    cursor: pointer;
+  }
+  #startBtn:hover, #restartBtn:hover {
+    background-color: #ff4500;
+  }
+</style>
+</head>
+<body>
+
+<h1>🎉 Fast Fingers Fun 🎉</h1>
+<p>Type the words as fast as you can! Score points for every correct word.</p>
+
+<div id="wordDisplay">Press Start!</div>
+<input type="text" id="inputBox" placeholder="Type here..." disabled>
+<div id="score">Score: 0</div>
+<div id="timer">Time: 60s</div>
+<button id="startBtn">Start Game</button>
+<button id="restartBtn" style="display:none;">Restart Game</button>
+
+<script>
+const words = [
+  "unicorn", "pizza", "banana", "ninja", "robot", "cookie", "wizard",
+  "donut", "alien", "pancake", "monkey", "rocket", "dinosaur", "mermaid",
+  "octopus", "squirrel", "taco", "penguin", "bubblegum", "lava", "pikachu"
+];
+
+let score = 0;
+let timeLeft = 60;
+let currentWord = "";
+let timerInterval;
+
+const wordDisplay = document.getElementById("wordDisplay");
+const inputBox = document.getElementById("inputBox");
+const scoreDisplay = document.getElementById("score");
+const timerDisplay = document.getElementById("timer");
+const startBtn = document.getElementById("startBtn");
+const restartBtn = document.getElementById("restartBtn");
+
+function randomWord() {
+  return words[Math.floor(Math.random() * words.length)];
+}
+
+function startGame() {
+  score = 0;
+  timeLeft = 60;
+  inputBox.disabled = false;
+  inputBox.value = "";
+  inputBox.focus();
+  startBtn.style.display = "none";
+  restartBtn.style.display = "none";
+  scoreDisplay.textContent = "Score: 0";
+  timerDisplay.textContent = "Time: 60s";
+  currentWord = randomWord();
+  wordDisplay.textContent = currentWord;
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerDisplay.textContent = `Time: ${timeLeft}s`;
+    if(timeLeft <= 0) {
+      clearInterval(timerInterval);
+      endGame();
+    }
+  }, 1000);
+}
+
+function checkWord() {
+  if(inputBox.value.trim().toLowerCase() === currentWord.toLowerCase()) {
+    score++;
+    scoreDisplay.textContent = `Score: ${score}`;
+    inputBox.value = "";
+    currentWord = randomWord();
+    wordDisplay.textContent = currentWord;
+    // Add fun animation
+    wordDisplay.style.color = `hsl(${Math.random()*360}, 70%, 50%)`;
+  }
+}
+
+function endGame() {
+  wordDisplay.textContent = `🎉 Game Over! Your Score: ${score} 🎉`;
+  inputBox.disabled = true;
+  startBtn.style.display = "none";
+  restartBtn.style.display = "inline-block";
+}
+
+inputBox.addEventListener("input", checkWord);
+startBtn.addEventListener("click", startGame);
+restartBtn.addEventListener("click", startGame);
+</script>
+
+</body>
+</html>
